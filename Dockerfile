@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-devel
+FROM tensorflow/tensorflow:latest
 
 COPY requirements.txt fcn-tuning.py data_sets20r.npz ./
 
