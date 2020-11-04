@@ -4,7 +4,6 @@ import numpy as np
 import datetime as dt
 import os
 from kerastuner.tuners import RandomSearch
-import pickle
 import sys
 
 dataset_file_name = 'data_sets20r.npz'
@@ -28,7 +27,7 @@ print(f'\n\nShapes: x_train = {x_train.shape}, y_train = {y_train.shape}, '
 input_shape = x_train.shape[1:]
 num_classes = y_train.shape[1]
 mini_batch_size = 128
-num_epochs = 1#50
+num_epochs = 35
 
 def build_model(hp):
 
@@ -36,33 +35,33 @@ def build_model(hp):
 
       conv1 = keras.layers.Conv1D(filters = hp.Int('units_1',
                                             min_value=32,
-                                            max_value=64,#512,
+                                            max_value=512,
                                             step=32), 
                                   kernel_size = hp.Int('kernel_1',
                                             min_value=1,
-                                            max_value=2,#10,
+                                            max_value=10,
                                             step=1), padding = 'same')(input_layer)
       conv1 = keras.layers.BatchNormalization()(conv1)
       conv1 = keras.layers.ReLU()(conv1)
 
       conv2 = keras.layers.Conv1D(filters = hp.Int('units_2',
                                             min_value=32,
-                                            max_value=64,#512
+                                            max_value=512,
                                             step=32), 
                                   kernel_size = hp.Int('kernel_2',
                                             min_value=1,
-                                            max_value=2,#10,
+                                            max_value=10,
                                             step=1), padding = 'same')(conv1)
       conv2 = keras.layers.BatchNormalization()(conv2)
       conv2 = keras.layers.ReLU()(conv2)
 
       conv3 = keras.layers.Conv1D(filters = hp.Int('units_3',
                                             min_value=32,
-                                            max_value=64,#512
+                                            max_value=512,
                                             step=32), 
                                   kernel_size = hp.Int('kernel_3',
                                             min_value=1,
-                                            max_value=2,#10,
+                                            max_value=10,
                                             step=1), padding = 'same')(conv2)
       conv3 = keras.layers.BatchNormalization()(conv3)
       conv3 = keras.layers.ReLU()(conv3)
@@ -83,8 +82,8 @@ def build_model(hp):
 # Declare tuner:
 tuner = RandomSearch(build_model,
                      objective = 'val_accuracy',
-                     max_trials = 3,#0000,
-                     executions_per_trial = 1,#3,
+                     max_trials = 1000,
+                     executions_per_trial = 3,
                      directory = logdir,
                      project_name = project_name)
 
@@ -101,7 +100,7 @@ tuner.search(x_train, y_train, batch_size = mini_batch_size, epochs = num_epochs
 
 
 sys.stdout = open(logdir + project_name + '/results.txt', 'w')
-tuner.results_summary(num_trials = 100)
+tuner.results_summary(num_trials = 200)
 
 model = tuner.get_best_models(num_models = 1)[0]
 model.save(logdir + project_name + '/best_model.hdf5')
