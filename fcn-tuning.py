@@ -100,7 +100,7 @@ tuner.search(x_train, y_train, batch_size = mini_batch_size, epochs = num_epochs
 
 
 sys.stdout = open(logdir + project_name + '/results.txt', 'w')
-tuner.results_summary(num_trials = 200)
+tuner.results_summary(num_trials = 1000)
 
 model = tuner.get_best_models(num_models = 1)[0]
 model.save(logdir + project_name + '/best_model.hdf5')
