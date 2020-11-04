@@ -83,7 +83,7 @@ def build_model(hp):
 # Declare tuner:
 tuner = RandomSearch(build_model,
                      objective = 'val_accuracy',
-                     max_trials = 1,#0000,
+                     max_trials = 3,#0000,
                      executions_per_trial = 1,#3,
                      directory = logdir,
                      project_name = project_name)
